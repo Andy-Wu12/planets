@@ -14,6 +14,35 @@ const friends = [
   }
 ];
 
+// Defining our custom middleware to log request info
+app.use((req, res, next) => {
+  const start = Date.now();
+  // Ensure express passes request to correct handler. Server will hang otherwise
+  next();
+  // After next function completes
+  const delta = Date.now() - start;
+  console.log(`${req.method} ${req.url} ${delta}ms`);
+
+})
+
+app.use(express.json());
+
+app.post('/friends', (req, res) => {
+  if(!req.body.name) {
+    return res.status(400).json({
+      error: 'Missing friend name'
+    });
+  }
+   
+  const newFriend = {
+    id: friends.length,
+    name: req.body.name
+  };
+  friends.push(newFriend);
+
+  res.json(newFriend);
+});
+
 app.get('/friends', (req, res) => {
   res.json(friends);
 });
@@ -33,14 +62,6 @@ app.get('/friends/:friendId', (req, res) => {
       error: "Friend does not exist"
     });
   }
-})
-
-app.get('/message', (req, res) => {
-  res.send('<ul><li>HELLOOO</li></u l>');
-});
-
-app.post('/messages', (req, res) => {
-  console.log('updating messages...');
 })
 
 app.listen(PORT, () => {
