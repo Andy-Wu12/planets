@@ -1,16 +1,24 @@
 {
   "name": "planets",
   "version": "1.0.0",
-  "description": "",
+  "description": "Complete NodeJS Developer in 2023 Bootcamp",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andy-Wu12/planets.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Andy-Wu12/planets/issues"
+  },
+  "homepage": "https://github.com/Andy-Wu12/planets#readme",
   "dependencies": {
-    "csv-parse": "^5.3.6"
+    "express": "^4.18.2"
   }
 }
