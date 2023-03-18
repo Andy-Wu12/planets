@@ -1,4 +1,4 @@
-export const friends = [
+const friends = [
   {
     id: 0,
     name: 'andy wu'

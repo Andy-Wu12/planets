@@ -1,9 +1,9 @@
 
-export function getMessages(req, res) {
+function getMessages(req, res) {
   res.send('<ul><li>Helloooo</li></ul>');
 }
 
-export function postMessage(req, res) {
+function postMessage(req, res) {
   console.log('Updating messages...');
 }
 

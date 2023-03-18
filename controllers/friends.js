@@ -1,6 +1,6 @@
 import model from '../models/friend.js';
 
-export function postFriend(req, res) {
+function postFriend(req, res) {
   if(!req.body.name) {
     return res.status(400).json({
       error: 'Missing friend name'
@@ -16,11 +16,11 @@ export function postFriend(req, res) {
   res.json(newFriend);
 }
 
-export function getFriends(req, res) {
+function getFriends(req, res) {
   res.json(model);
 }
 
-export function getFriend(req, res) {
+function getFriend(req, res) {
   const friendId = Number(req.params.friendId);
   const friend = model[friendId];
 
@@ -36,6 +36,6 @@ export function getFriend(req, res) {
   }
 }
 
-export const Controller = { getFriends, getFriend, postFriend };
+const Controller = { getFriends, getFriend, postFriend };
 
 export default Controller;
