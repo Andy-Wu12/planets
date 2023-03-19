@@ -1,7 +1,13 @@
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import friendsRouter from './routes/friends.js';
 import messagesRouter from './routes/messages.js';
+
+// Required if attempting to use __dirname in an ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3000;
@@ -17,6 +23,7 @@ app.use((req, res, next) => {
 
 })
 
+app.use('/site', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 app.use('/friends', friendsRouter);
