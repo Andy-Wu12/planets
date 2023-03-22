@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 
 import planetsRouter from './routes/planets/planets.router.js';
+import launchesRouter from './routes/launches/launches.router.js';
 
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -21,7 +22,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')))
 
 app.use(planetsRouter);
-app.get('/', (req, res) => {
+app.use(launchesRouter);
+
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
