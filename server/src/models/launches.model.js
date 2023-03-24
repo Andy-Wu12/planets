@@ -18,6 +18,9 @@ const launch = {
 
 launches.set(launch.flightNumber, launch);
 
+function existsLaunchWithId(launchId) {
+  return launches.has(launchId)
+}
 
 function getAllLaunches() {
   return Array.from(launches.values());
@@ -36,7 +39,18 @@ function addNewLaunch(launch) {
   )
 }
 
+// Instead of deleting data, keep it but just mark as aborted and failed
+function abortLaunchById(launchId) {
+  const aborted = launches.get(launchId);
+  aborted.upcoming = false;
+  aborted.success = false;
+
+  return aborted;
+}
+
 export {
+  existsLaunchWithId,
   getAllLaunches,
-  addNewLaunch
+  addNewLaunch,
+  abortLaunchById
 }
