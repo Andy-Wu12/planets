@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Complete NodeJS Developer in 2023 Bootcamp",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "install-sever": "npm install --prefix server",
     "install-client": "npm install --prefix client",
@@ -11,7 +12,7 @@
     "client": "npm start --prefix client",
     "watch": "npm run server & npm run client",
     "deploy": "npm run build --prefix client && npm start --prefix server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm test --prefix server && npm test --prefix client"
   },
   "repository": {
     "type": "git",
