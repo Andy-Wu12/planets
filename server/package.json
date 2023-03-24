@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test-watch": "jest --watch",
+    "test-watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "watch": "nodemon src/server.js",
     "start": "node src/server.js"
   },
