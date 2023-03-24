@@ -5,10 +5,15 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test-watch": "jest --watch",
     "watch": "nodemon src/server.js",
     "start": "node src/server.js"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
   },
   "keywords": [],
   "author": "",
@@ -21,6 +26,7 @@
   },
   "devDependencies": {
     "jest": "^29.5.0",
-    "nodemon": "^2.0.21"
+    "nodemon": "^2.0.21",
+    "supertest": "^6.3.3"
   }
 }

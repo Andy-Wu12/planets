@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Complete NodeJS Developer in 2023 Bootcamp",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "install-sever": "npm install --prefix server",
     "install-client": "npm install --prefix client",
