@@ -38,20 +38,33 @@ app.get('/timer', (req, res) => {
 
   i.e. - If two different timer requests are triggered on both workers below,
       another request to root will have to wait for first fork to unblock
+
+  This is a built-in way to implement load-balancing, a way to scale horizontally
 */
 
 console.log("Running server.js");
-if(cluster.isPrimary) {
-  console.log('Master has been started...');
 
-  // Get # of logical cores on system and creater corresponding amount of workers
-  const NUM_WORKERS = os.cpus().length;
+/* 
+  This can all be managed automatically by PM2 module
+  npx pm2 start server.js -i max
 
-  for(let i = 0; i < NUM_WORKERS; i++) {
-    cluster.fork();
-  }
+  https://www.udemy.com/course/complete-nodejs-developer-zero-to-mastery/learn/lecture/25982852#overview
 
-} else {
-  console.log('Worker process started...');
-  app.listen(3000);
-}
+  `pm2 reload [app name]` allows us to have a zero-downtime restart
+*/
+
+// if(cluster.isPrimary) {
+//   console.log('Master has been started...');
+
+//   // Get # of logical cores on system and creater corresponding amount of workers
+//   const NUM_WORKERS = os.cpus().length;
+
+//   for(let i = 0; i < NUM_WORKERS; i++) {
+//     cluster.fork();
+//   }
+
+// } else {
+
+console.log('Worker process started...');
+app.listen(3000);
+// }

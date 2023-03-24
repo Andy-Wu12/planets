@@ -1,3 +1,9 @@
+
 node_modules/
 public
+
+# PM2 logging
+logs.txt
+
+# Mac
 .DS_Store
