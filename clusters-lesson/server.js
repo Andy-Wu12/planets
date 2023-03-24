@@ -2,6 +2,7 @@
 
 import express from 'express';
 import cluster from 'cluster';
+import os from 'os';
 
 const app = express();
 
@@ -42,8 +43,14 @@ app.get('/timer', (req, res) => {
 console.log("Running server.js");
 if(cluster.isPrimary) {
   console.log('Master has been started...');
-  cluster.fork();
-  cluster.fork();
+
+  // Get # of logical cores on system and creater corresponding amount of workers
+  const NUM_WORKERS = os.cpus().length;
+
+  for(let i = 0; i < NUM_WORKERS; i++) {
+    cluster.fork();
+  }
+
 } else {
   console.log('Worker process started...');
   app.listen(3000);
