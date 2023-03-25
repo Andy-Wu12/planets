@@ -40,6 +40,14 @@ app.get('/timer', (req, res) => {
       another request to root will have to wait for first fork to unblock
 
   This is a built-in way to implement load-balancing, a way to scale horizontally
+
+  Similarly, new Worker() lets us run multiple instances of node in the
+  SAME PROCESS (unlike separate processed for fork()), but each in their OWN THREAD
+
+  Worker threads DO NOT provide a distribution of work. They do however, provide
+  a shared memory space.
+
+  https://www.udemy.com/course/complete-nodejs-developer-zero-to-mastery/learn/lecture/26199416#overview
 */
 
 console.log("Running server.js");
