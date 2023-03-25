@@ -2,6 +2,9 @@
 node_modules/
 public
 
+# Environment
+.env
+
 # PM2 logging
 logs.txt
 
