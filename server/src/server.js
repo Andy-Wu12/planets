@@ -21,7 +21,9 @@ mongoose.connection.on('error', (err) => {
 });
 
 async function startServer() {
-  await mongoose.connect(process.env.MONGO_URI);
+  await mongoose.connect(process.env.MONGO_URI, {
+    dbName: 'nasa-api'
+  });
 
   await loadPlanetsData();
 
