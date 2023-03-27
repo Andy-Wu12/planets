@@ -3,20 +3,22 @@ import fs from 'fs';
 
 import planets from './planets.mongo.js';
 
+import type { IPlanet } from './planets.mongo.js';
+
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-function isHabitablePlanet(planet) {
+function isHabitablePlanet(planet: any): boolean {
   return planet['koi_disposition'] === 'CONFIRMED'
     && planet['koi_insol'] > 0.36 && planet['koi_insol'] < 1.11
     && planet['koi_prad'] < 1.6;
 }
 
 function loadPlanetsData() {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     fs.createReadStream(path.join(__dirname, '..', '..', 'data', 'kepler_data.csv'))
       .pipe(parse({
         comment: '#',
@@ -39,7 +41,7 @@ function loadPlanetsData() {
   });
 }
 
-async function getAllPlanets() {
+async function getAllPlanets(): Promise<IPlanet[]> {
   // Optional second parameter 'projection' to include / exclude fields from result
   // Ex: { keplerName: 0 } to hide or 1 to show
   // Ex 2: 'keplerName anotherField'. To exclude field, use - i.e. '-keplerName'
@@ -52,7 +54,7 @@ async function getAllPlanets() {
   });
 };
 
-async function savePlanet(planet) {
+async function savePlanet(planet: any) {
   try {
     await planets.updateOne({
       keplerName: planet.kepler_name,
