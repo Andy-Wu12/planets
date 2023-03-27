@@ -7,10 +7,9 @@
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test-watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
-    "watch": "nodemon build/src/server.js",
-    "start": "node build/src/server.js",
-    "cluster": "pm2 start build/src/server.js -i max",
-
+    "watch": "nodemon build/server.js",
+    "start": "node build/server.js",
+    "cluster": "pm2 start build/server.js -i max",
     "ts-clean": "rm -r ./build",
     "ts-copy-assets": "cp -r ./data ./public ./build",
     "ts-build": "npm run ts-clean && tsc && npm run ts-copy-assets"
@@ -33,6 +32,11 @@
     "pm2": "^5.3.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.0",
+    "@types/morgan": "^1.9.4",
+    "@types/supertest": "^2.0.12",
     "jest": "^29.5.0",
     "nodemon": "^2.0.21",
     "supertest": "^6.3.3"

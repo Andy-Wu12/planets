@@ -1,10 +1,12 @@
 import { getAllLaunches, addNewLaunch, existsLaunchWithId, abortLaunchById } from "../../models/launches.model.js";
 
-async function httpGetAllLaunches(req, res) {
+import type { Request, Response } from "express";
+
+async function httpGetAllLaunches(req: Request, res: Response) {
   return res.status(200).json(await getAllLaunches());
 }
 
-async function httpAddNewLaunch(req, res) {
+async function httpAddNewLaunch(req: Request, res: Response) {
   const launch = req.body;
   
   if(!(launch.mission && launch.rocket && launch.launchDate && launch.target)) {
@@ -24,7 +26,7 @@ async function httpAddNewLaunch(req, res) {
   return res.status(201).json(launch);
 }
 
-async function httpAbortLaunch(req, res) {
+async function httpAbortLaunch(req: Request, res: Response) {
   const launchId = Number(req.params.id);
 
   if(!existsLaunchWithId(launchId)) {
