@@ -1,6 +1,17 @@
 import mongoose from 'mongoose';
 
-const launchesSchema = new mongoose.Schema({
+export interface ILaunch {
+  flightNumber: number,
+  launchDate: Date,
+  mission: string,
+  rocket: string,
+  target: string,
+  customers: string[],
+  upcoming: boolean,
+  success: boolean
+}
+
+const launchesSchema = new mongoose.Schema<ILaunch>({
   flightNumber: {
     type: Number,
     required: true,
@@ -34,6 +45,6 @@ const launchesSchema = new mongoose.Schema({
 });
 
 // Connects launchesSchema with launches collection in mongodb
-const launches = mongoose.model('Launch', launchesSchema);
+const Launches = mongoose.model<ILaunch>('Launch', launchesSchema);
 
-export default launches;
+export default Launches;

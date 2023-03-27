@@ -7,9 +7,13 @@
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test-watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
-    "watch": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "cluster": "pm2 start src/server.js -i max"
+    "watch": "nodemon build/src/server.js",
+    "start": "node build/src/server.js",
+    "cluster": "pm2 start build/src/server.js -i max",
+
+    "ts-clean": "rm -r ./build",
+    "ts-copy-assets": "cp -r ./data ./public ./build",
+    "ts-build": "npm run ts-clean && tsc && npm run ts-copy-assets"
   },
   "jest": {
     "transform": {

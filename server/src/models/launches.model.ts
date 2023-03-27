@@ -1,9 +1,11 @@
-import launches from "./launches.mongo.js";
+import Launches from "./launches.mongo.js";
 import planets from "./planets.mongo.js";
+
+import type { ILaunch } from "./launches.mongo.js";
 
 let latestFlightNumber = 100;
 
-const launch = {
+const launch: ILaunch = {
   flightNumber: 100,
   mission: 'Kepler Exploration X',
   rocket: 'Explorer IS1',
@@ -19,20 +21,23 @@ const launch = {
 
 saveLaunch(launch);
 
-function existsLaunchWithId(launchId) {
-  return launches.has(launchId)
+async function existsLaunchWithId(launchId: number): Promise<boolean> {
+  const launch = await Launches.exists({
+    flightNumber: launchId
+  });
+
+  return launch !== null;
 }
 
 async function getAllLaunches() {
-  return await launches.find({}, {
+  return await Launches.find({}, {
     '_id': 0, '__v': 0
   });
 }
 
-function addNewLaunch(launch) {
+async function addNewLaunch(launch: ILaunch): Promise<void> {
   latestFlightNumber++;
-  launches.set(
-    latestFlightNumber,
+  await saveLaunch(
     Object.assign(launch, {
       success: true,
       upcoming: true,
@@ -43,15 +48,21 @@ function addNewLaunch(launch) {
 }
 
 // Instead of deleting data, keep it but just mark as aborted and failed
-function abortLaunchById(launchId) {
-  const aborted = launches.get(launchId);
-  aborted.upcoming = false;
-  aborted.success = false;
+async function abortLaunchById(launchId: number): Promise<ILaunch | null> {
+  const aborted = await Launches.findOne({
+    flightNumber: launchId
+  });
+
+  if(aborted) {
+    aborted.upcoming = false;
+    aborted.success = false;
+    await saveLaunch(aborted);
+  }
 
   return aborted;
 }
 
-async function saveLaunch(launch) {
+async function saveLaunch(launch: ILaunch): Promise<void> {
   const planet = await planets.findOne({
     keplerName: launch.target
   });
@@ -60,7 +71,7 @@ async function saveLaunch(launch) {
     throw new Error('No matching planet was found!');
   }
 
-  await launches.updateOne({
+  await Launches.updateOne({
     flightNumber: launch.flightNumber
   }, launch, {
     upsert: true
