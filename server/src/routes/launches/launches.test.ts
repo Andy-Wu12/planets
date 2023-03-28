@@ -1,6 +1,6 @@
 import request from 'supertest';
 
-import app from '../../app.js';
+import app from '../../app';
 
 describe('Test GET /launches', () => {
   test('It should respond with 200 success', async () => {

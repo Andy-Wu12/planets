@@ -1,7 +1,7 @@
-import Launches from "./launches.mongo.js";
-import planets from "./planets.mongo.js";
+import Launches from "./launches.mongo";
+import planets from "./planets.mongo";
 
-import type { ILaunch } from "./launches.mongo.js";
+import type { ILaunch } from "./launches.mongo";
 
 let latestFlightNumber = 100;
 

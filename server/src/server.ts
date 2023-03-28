@@ -3,8 +3,8 @@ import http from 'http';
 
 import mongoose from 'mongoose';
 
-import app from './app.js';
-import { loadPlanetsData } from './models/planets.model.js';
+import app from './app';
+import { loadPlanetsData } from './models/planets.model';
 
 dotenv.config();
 
