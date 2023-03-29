@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { httpAddNewLaunch, httpGetAllLaunches, httpAbortLaunch } from './launches.controller.js';
+import { httpAddNewLaunch, httpGetAllLaunches, httpAbortLaunch } from './launches.controller';
 
 const launchesRouter = express.Router({});
 

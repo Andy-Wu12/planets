@@ -3,13 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
-import planetsRouter from './routes/planets/planets.router.js';
-import launchesRouter from './routes/launches/launches.router.js';
-
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import planetsRouter from './routes/planets/planets.router';
+import launchesRouter from './routes/launches/launches.router';
 
 const app = express();
 

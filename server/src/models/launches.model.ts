@@ -1,9 +1,9 @@
-import Launches from "./launches.mongo.js";
-import planets from "./planets.mongo.js";
+import Launches from "./launches.mongo";
+import planets from "./planets.mongo";
 
-import type { ILaunch } from "./launches.mongo.js";
+import type { ILaunch } from "./launches.mongo";
 
-let latestFlightNumber = 100;
+const DEFAULT_FLIGHT_NUMBER = 100;
 
 const launch: ILaunch = {
   flightNumber: 100,
@@ -21,12 +21,21 @@ const launch: ILaunch = {
 
 saveLaunch(launch);
 
-async function existsLaunchWithId(launchId: number): Promise<boolean> {
-  const launch = await Launches.exists({
+async function existsLaunchWithId(launchId: number): Promise<ILaunch | null> {
+  return await Launches.findOne({
     flightNumber: launchId
   });
 
-  return launch !== null;
+}
+
+async function getLatestFlightNumber(): Promise<number> {
+  const latestLaunch = await Launches.findOne().sort('-flightNumber');
+
+  if(!latestLaunch) {
+    return DEFAULT_FLIGHT_NUMBER;
+  }
+
+  return latestLaunch.flightNumber;
 }
 
 async function getAllLaunches() {
@@ -35,31 +44,29 @@ async function getAllLaunches() {
   });
 }
 
-async function addNewLaunch(launch: ILaunch): Promise<void> {
-  latestFlightNumber++;
-  await saveLaunch(
-    Object.assign(launch, {
-      success: true,
-      upcoming: true,
-      customers: ['ZTM', 'NASA'],
-      flightNumber: latestFlightNumber,
-    })
-  )
+async function scheduleNewLaunch(launch: ILaunch) {
+  const newFlightNumber = await getLatestFlightNumber() + 1;
+
+  const newLaunch: ILaunch = Object.assign(launch, {
+    flightNumber: newFlightNumber,
+    success: true,
+    upcoming: true,
+    customers: ['ZTM', 'NASA'],
+  })
+
+  await saveLaunch(newLaunch);
 }
 
 // Instead of deleting data, keep it but just mark as aborted and failed
-async function abortLaunchById(launchId: number): Promise<ILaunch | null> {
-  const aborted = await Launches.findOne({
+async function abortLaunchById(launchId: number): Promise<boolean> {
+  const abortedResult = await Launches.updateOne({
     flightNumber: launchId
+  }, {
+    upcoming: false,
+    success: false
   });
 
-  if(aborted) {
-    aborted.upcoming = false;
-    aborted.success = false;
-    await saveLaunch(aborted);
-  }
-
-  return aborted;
+  return abortedResult.acknowledged && abortedResult.modifiedCount == 1
 }
 
 async function saveLaunch(launch: ILaunch): Promise<void> {
@@ -71,7 +78,10 @@ async function saveLaunch(launch: ILaunch): Promise<void> {
     throw new Error('No matching planet was found!');
   }
 
-  await Launches.updateOne({
+  // Unlike updateOne, 
+  // findOneAndUpdate only returns the properties that we explicitly set  
+  // That means hidden data like __v is NOT returned
+  await Launches.findOneAndUpdate({
     flightNumber: launch.flightNumber
   }, launch, {
     upsert: true
@@ -81,6 +91,6 @@ async function saveLaunch(launch: ILaunch): Promise<void> {
 export {
   existsLaunchWithId,
   getAllLaunches,
-  addNewLaunch,
+  scheduleNewLaunch,
   abortLaunchById
 }

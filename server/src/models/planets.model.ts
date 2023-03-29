@@ -1,15 +1,11 @@
 import { parse } from 'csv-parse';
 import fs from 'fs';
 
-import planets from './planets.mongo.js';
+import planets from './planets.mongo';
 
-import type { IPlanet } from './planets.mongo.js';
+import type { IPlanet } from './planets.mongo';
 
 import path from 'path';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function isHabitablePlanet(planet: any): boolean {
   return planet['koi_disposition'] === 'CONFIRMED'

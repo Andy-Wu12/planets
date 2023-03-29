@@ -1,4 +1,4 @@
-import { getAllPlanets } from '../../models/planets.model.js';
+import { getAllPlanets } from '../../models/planets.model';
 
 import type { Request, Response } from 'express';
 

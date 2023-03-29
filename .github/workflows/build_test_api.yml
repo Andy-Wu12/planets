@@ -16,8 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     
     strategy:
+        # TODO: Testing multiple versions requires figuring out 
+        # a way to mongoose.disconnect() without affecting all jobs using the same connection. 
+        # Maybe use Docker instances?
         matrix:
-            node-version: [18.x, 19.x]
+            node-version: [19.x]
             
     steps:
     - uses: actions/checkout@v3
@@ -26,7 +29,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Run Build and Test
+      env:
+        MONGO_URI: ${{ secrets.MONGO_URI }}
       run: |
         npm ci
-        npm run build --if-present
+        npm run ts-build --if-present
         npm test
