@@ -1,4 +1,4 @@
-import { getAllLaunches, addNewLaunch, existsLaunchWithId, abortLaunchById } from "../../models/launches.model";
+import { getAllLaunches, scheduleNewLaunch, existsLaunchWithId, abortLaunchById } from "../../models/launches.model";
 
 import type { Request, Response } from "express";
 
@@ -22,7 +22,7 @@ async function httpAddNewLaunch(req: Request, res: Response) {
     })
   }
 
-  await addNewLaunch(launch);
+  await scheduleNewLaunch(launch);
   return res.status(201).json(launch);
 }
 
