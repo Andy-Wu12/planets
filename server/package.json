@@ -11,7 +11,7 @@
     "start": "npm run ts-build && node build/src/server.js",
     "cluster": "npm run ts-build && pm2 start build/src/server.js -i max",
     "ts-clean": "rm -r ./build || true",
-    "ts-copy-assets": "cp -r ./data ./build & cp -r ./public ./build 2>/dev/null || :",
+    "ts-copy-assets": "cp -r ./data ./build && cp -r ./public ./build 2>/dev/null || :",
     "no-test-build": "tsc --project tsconfig.build.json",
     "ts-build": "npm run ts-clean && npm run no-test-build && npm run ts-copy-assets"
   },
