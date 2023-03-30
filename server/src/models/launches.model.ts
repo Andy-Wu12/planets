@@ -1,28 +1,107 @@
+import fetch from 'isomorphic-fetch';
+
 import Launches from "./launches.mongo";
 import planets from "./planets.mongo";
 
 import type { ILaunch } from "./launches.mongo";
 
 const DEFAULT_FLIGHT_NUMBER = 100;
+const SPACEX_API_URL = 'https://api.spacexdata.com/v4/launches/query';
 
-const launch: ILaunch = {
-  flightNumber: 100,
-  mission: 'Kepler Exploration X',
-  rocket: 'Explorer IS1',
-  launchDate: new Date('December 27, 2030'),
-  target: 'Kepler-442 b',
+const launch: ILaunch = { 
+  flightNumber: 100, // flight_number
+  mission: 'Kepler Exploration X', // name
+  rocket: 'Explorer IS1', // rocket.name
+  launchDate: new Date('December 27, 2030'), // date_local
+  target: 'Kepler-442 b', // Not applicable to SpaceX API
   customers: [
     'NASA',
     'ZTM'
-  ],
-  upcoming: true,
-  success: true
+  ], // payload.customers for each payload
+  upcoming: true, // upcoming
+  success: true // success
 }
 
 saveLaunch(launch);
 
+async function populateLaunches(): Promise<void> {
+  // https://github.com/r-spacex/SpaceX-API/blob/master/docs/queries.md
+  const queryData = {
+    query: {},
+    options: {
+      pagination: false,
+      populate: [
+        {
+          path: 'rocket',
+          select: {
+            name: 1
+          }
+        },
+        {
+          path: 'payloads',
+          select: {
+            customers: 1
+          }
+        }
+      ]
+    }
+  };
+
+  const response = await fetch(SPACEX_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(queryData)
+  });
+
+  const launchDocs = (await response.json());
+  console.log(launchDocs.totalDocs);
+  console.log(launchDocs.totalPages);
+
+  for(const launchDoc of launchDocs.docs) {
+    const payloads = launchDoc['payloads'];
+    const customers = payloads.flatMap((payload: any) => {
+      return payload['customers'];
+    })
+
+    const launch = {
+      flightNumber: launchDoc['flight_number'],
+      mission: launchDoc['name'],
+      rocket: launchDoc['rocket']['name'],
+      launchDate: launchDoc['date_local'],
+      upcoming: launchDoc['upcoming'],
+      success: launchDoc['success'],
+      customers: customers
+    };
+
+    console.log(`${launch.flightNumber} ${launch.mission}`);
+
+    // TODO: Persist data
+  }
+}
+
+async function loadLaunchData(): Promise<void> {
+  // Check if launch exists (data already populated) and run expensive query if not
+  const firstLaunch = await findLaunch({
+    flightNumber: 1,
+    rocket: 'Falcon 1',
+    mission: 'FalconSat'
+  })
+
+  if(firstLaunch) {
+    console.log('Launch data already loaded');
+  } else {
+    await populateLaunches();
+  }
+}
+
+async function findLaunch(filter: any): Promise<ILaunch | null> {
+  return await Launches.findOne(filter);
+}
+
 async function existsLaunchWithId(launchId: number): Promise<ILaunch | null> {
-  return await Launches.findOne({
+  return await findLaunch({
     flightNumber: launchId
   });
 
@@ -89,6 +168,7 @@ async function saveLaunch(launch: ILaunch): Promise<void> {
 }
 
 export {
+  loadLaunchData,
   existsLaunchWithId,
   getAllLaunches,
   scheduleNewLaunch,
