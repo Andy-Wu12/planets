@@ -22,8 +22,6 @@ const launch: ILaunch = {
   success: true // success
 }
 
-saveLaunch(launch);
-
 async function populateLaunches(): Promise<void> {
   // https://github.com/r-spacex/SpaceX-API/blob/master/docs/queries.md
   const queryData = {
