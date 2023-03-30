@@ -55,9 +55,12 @@ async function populateLaunches(): Promise<void> {
     body: JSON.stringify(queryData)
   });
 
+  if(response.status !== 200) {
+    console.log('Problem downloading launch data');
+    throw new Error('Launch data download failed');
+  }
+
   const launchDocs = (await response.json());
-  console.log(launchDocs.totalDocs);
-  console.log(launchDocs.totalPages);
 
   for(const launchDoc of launchDocs.docs) {
     const payloads = launchDoc['payloads'];
@@ -77,7 +80,7 @@ async function populateLaunches(): Promise<void> {
 
     console.log(`${launch.flightNumber} ${launch.mission}`);
 
-    // TODO: Persist data
+    await saveLaunch(launch);
   }
 }
 
@@ -124,6 +127,14 @@ async function getAllLaunches() {
 }
 
 async function scheduleNewLaunch(launch: ILaunch) {
+  const planet = await planets.findOne({
+    keplerName: launch.target
+  });
+
+  if(!planet) {
+    throw new Error('No matching planet was found!');
+  }
+
   const newFlightNumber = await getLatestFlightNumber() + 1;
 
   const newLaunch: ILaunch = Object.assign(launch, {
@@ -149,14 +160,6 @@ async function abortLaunchById(launchId: number): Promise<boolean> {
 }
 
 async function saveLaunch(launch: ILaunch): Promise<void> {
-  const planet = await planets.findOne({
-    keplerName: launch.target
-  });
-
-  if(!planet) {
-    throw new Error('No matching planet was found!');
-  }
-
   // Unlike updateOne, 
   // findOneAndUpdate only returns the properties that we explicitly set  
   // That means hidden data like __v is NOT returned

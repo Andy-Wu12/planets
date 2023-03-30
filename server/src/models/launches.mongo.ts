@@ -5,7 +5,7 @@ export interface ILaunch {
   launchDate: Date,
   mission: string,
   rocket: string,
-  target: string,
+  target?: string,
   customers: string[],
   upcoming: boolean,
   success: boolean
@@ -30,7 +30,6 @@ const launchesSchema = new mongoose.Schema<ILaunch>({
   },
   target: {
     type: String,
-    required: true
   },
   customers: [ String ],
   upcoming: {
