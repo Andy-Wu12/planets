@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --silent=false",
     "test-watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "watch": "npm run ts-build && nodemon build/src/server.js",
     "start": "npm run ts-build && node build/src/server.js",
