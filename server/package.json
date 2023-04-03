@@ -23,6 +23,7 @@
     "csv-parse": "^5.3.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "helmet": "^6.0.1",
     "isomorphic-fetch": "^3.0.0",
     "mongoose": "^7.0.3",
     "morgan": "^1.10.0",

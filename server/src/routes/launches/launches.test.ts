@@ -1,7 +1,10 @@
 import request from 'supertest';
+
 import app from '../../app';
 
 import { mongoConnect, mongoDisconnect } from '../../services/mongo';
+import { loadPlanetsData } from '../../models/planets.model';
+import { loadLaunchData } from '../../models/launches.model';
 
 function getRandomInt(limit: number, offset: number = 0) {
   return Math.round((Math.random() * limit) + offset);
@@ -13,13 +16,14 @@ describe('Launches API', () => {
   const validLimitNotZero = getRandomInt(20, MIN_PAGE_LIMIT + 1);
   const invalidLimit = getRandomInt(-20, MIN_PAGE_LIMIT - 1);
 
-  const validPage = getRandomInt(5, MIN_PAGE_NUMBER);
   const invalidPage = getRandomInt(-5);
 
   // Note that these E2E tests actually affect the real database. 
   // It would be a good idea to create a database specifically for testing to prevent issues in production.
   beforeAll(async () => {
     await mongoConnect();
+    await loadPlanetsData();
+    await loadLaunchData();
   })
 
   afterAll(async () => {
